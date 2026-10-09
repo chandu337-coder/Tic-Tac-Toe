@@ -24,7 +24,9 @@ const gameboard = (()=>{
         for(let i=0;i<9;i++){
             gameBoard[i]="";
             squares[i].textContent = "";
+            squares[i].style.backgroundColor = "grey";
         }
+        return false;
     }
 
     const winning = (p) => {
@@ -34,12 +36,15 @@ const gameboard = (()=>{
             let m3 = arr[2];
             if(gameBoard[m1]!="" && gameBoard[m2]!="" && gameBoard[m3]!=""){
                 if(gameBoard[m1]==gameBoard[m2] && gameBoard[m1]==gameBoard[m3]){
-                    alert(`${p.name} win`);
+                    document.getElementById(m1).style.backgroundColor = "green";
+                    document.getElementById(m2).style.backgroundColor = "green";
+                    document.getElementById(m3).style.backgroundColor = "green";
                     p.score++;
                     return true;
                 }
             }
         }
+        return false;
     }
     return {
         handleClick,
@@ -48,13 +53,14 @@ const gameboard = (()=>{
     }
 })();
 
+let gameOver = false;
+
 const Game = (()=>{
     let players = [];
     const start = () => {
         players = [createPlayer(document.getElementById("player1").value,"X",0),createPlayer(document.getElementById("player2").value,"O",0)];
         console.log(players);
     }
-    let gameOver = false;
     const box = document.getElementById("gameboard");
     let currPlayerIndex = 0;
     for(let i=0;i<9;i++){
@@ -63,6 +69,7 @@ const Game = (()=>{
         square.id = i;
         box.appendChild(square);
         square.addEventListener("click",(e)=>{
+            if(gameOver) return;
             if(square.textContent==""){
                 if(currPlayerIndex==0) currPlayerIndex = 1;
                 else currPlayerIndex = 0;
@@ -71,8 +78,7 @@ const Game = (()=>{
             gameboard.handleClick(players[currPlayerIndex],index);
             gameOver = gameboard.winning(players[currPlayerIndex]);
             const display = document.getElementById("result-display");
-            display.textContent = `${players[0].name} score: ${players[0].score} || ${players[1].name} score: ${players[1].score}`
-            if(gameOver) gameboard.reset();
+            display.textContent = `${players[0].name} score: ${players[0].score} || ${players[1].name} score: ${players[1].score}`;
         })
     }
     return {
@@ -86,4 +92,5 @@ startBtn.addEventListener("click",()=>{
 
 restartBtn.addEventListener("click",()=>{
     gameboard.reset();
+    gameOver=false;
 })
