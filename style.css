@@ -30,8 +30,11 @@ h1{
     height: 100%;
     background-color: white;
     border-radius: 1rem;
-    font-size: 8rem;
-    background-color: gray;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12vh;
 }
 
 #result-display{
